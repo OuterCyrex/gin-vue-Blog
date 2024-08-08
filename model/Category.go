@@ -41,7 +41,7 @@ func GetCategory(pageSize int, pageNum int) []Category {
 	var cate []Category
 	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cate).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		fmt.Printf("用户查询出错,%v", err)
+		fmt.Printf("分类查询出错,%v", err)
 		return nil
 	}
 	return cate
