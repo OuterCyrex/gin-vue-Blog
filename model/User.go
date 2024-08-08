@@ -12,9 +12,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `json:"username" gorm:"type:varchar(20);unique;not null"`
-	Password string `json:"password" gorm:"type:varchar(20);not null"`
-	Role     int    `json:"role" type:"int"`
+	Username string `json:"username" gorm:"type:varchar(20);not null" validate:"required,min=4,max=12" label:"用户名"`
+	Password string `json:"password" gorm:"type:varchar(20);not null" validate:"required,min=6,max=20" label:"密码"`
+	Role     int    `json:"role" gorm:"type:int;DEFAULT:2" validate:"required,gte=1" label:"权限"`
 }
 
 //查询用户是否存在
@@ -41,14 +41,15 @@ func CreateUser(data *User) int {
 
 //查询用户列表
 
-func GetUsers(pageSize int, pageNum int) []User {
+func GetUsers(pageSize int, pageNum int) ([]User, int, int64) {
 	var users []User
-	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
+	var total int64
+	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Count(&total).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		fmt.Printf("用户查询出错,%v", err)
-		return nil
+		return nil, errmsg.ERROR, 0
 	}
-	return users
+	return users, errmsg.SUCCESS, total
 }
 
 //编辑用户信息
@@ -95,4 +96,22 @@ func ScryptPwd(password string) string {
 	}
 	fpw := base64.StdEncoding.EncodeToString(HashPw)
 	return fpw
+}
+
+//登录验证
+
+func CheckLogin(username, password string) int {
+	var users User
+	db.Where("username = ?", username).First(&users)
+	// gorm未查询到时返回默认空值
+	if users.ID == 0 {
+		return errmsg.ERROR_USER_NOT_EXIST
+	}
+	if ScryptPwd(password) != users.Password {
+		return errmsg.ERROR_PASSWORD_WRONG
+	}
+	if users.Role != 1 {
+		return errmsg.ERROR_NO_PRIVILIGE
+	}
+	return errmsg.SUCCESS
 }

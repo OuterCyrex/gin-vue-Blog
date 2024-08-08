@@ -39,11 +39,11 @@ func GetCategory(c *gin.Context) {
 
 	//Cancel limit and offset if value == -1 是gorm的特性
 
-	data := model.GetCategory(pageSize, pageNum)
-	code := errmsg.SUCCESS
+	data, code, total := model.GetCategory(pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
+		"total":   total,
 		"message": errmsg.GetErrMsg(code),
 	})
 }

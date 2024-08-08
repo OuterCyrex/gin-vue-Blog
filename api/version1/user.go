@@ -3,6 +3,7 @@ package version1
 import (
 	"gin-vue-blog/model"
 	"gin-vue-blog/utils/errmsg"
+	"gin-vue-blog/utils/validator"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -13,7 +14,17 @@ import (
 func AddUser(c *gin.Context) {
 	var data model.User
 	_ = c.ShouldBindJSON(&data)
-	code := model.CheckUser(data.Username)
+
+	msg, code := validator.Validate(&data)
+	if code != errmsg.SUCCESS {
+		c.JSON(http.StatusOK, gin.H{
+			"status": code,
+			"msg":    msg,
+		})
+		return
+	}
+
+	code = model.CheckUser(data.Username)
 	if code == errmsg.SUCCESS {
 		model.CreateUser(&data)
 	}
@@ -41,11 +52,11 @@ func GetUser(c *gin.Context) {
 
 	//Cancel limit and offset if value == -1 是gorm的特性
 
-	data := model.GetUsers(pageSize, pageNum)
-	code := errmsg.SUCCESS
+	data, code, total := model.GetUsers(pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
+		"total":   total,
 		"message": errmsg.GetErrMsg(code),
 	})
 }

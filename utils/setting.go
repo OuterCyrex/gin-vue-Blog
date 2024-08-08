@@ -10,6 +10,7 @@ import (
 var (
 	AppMode  string
 	HttpPort string
+	JwtKey   string
 
 	Db         string
 	DbHost     string
@@ -17,6 +18,11 @@ var (
 	DbUser     string
 	DbPassword string
 	DbName     string
+
+	AccessKey string
+	SecretKey string
+	Bucket    string
+	ImgServer string
 )
 
 // 从ini文件中获取参数
@@ -27,6 +33,7 @@ func init() {
 	}
 	LoadServer(file)
 	LoadDataBase(file)
+	LoadImgServer(file)
 }
 
 // 使用ini库 将设置的参数与变量匹配
@@ -35,6 +42,7 @@ func init() {
 func LoadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").MustString("debug")
 	HttpPort = file.Section("server").Key("HttpPort").MustString(":3000")
+	JwtKey = file.Section("server").Key("JwtKey").MustString("3f2e1d0c1b2a394857665544332211")
 }
 
 func LoadDataBase(file *ini.File) {
@@ -44,4 +52,11 @@ func LoadDataBase(file *ini.File) {
 	DbUser = file.Section("database").Key("DbUser").MustString("ginVueAdmin")
 	DbPassword = file.Section("database").Key("DbPassword").MustString("admin123")
 	DbName = file.Section("database").Key("DbName").MustString("ginvueblog")
+}
+
+func LoadImgServer(file *ini.File) {
+	AccessKey = file.Section("img").Key("AccessKey").MustString("OuUTP7P80mLqYTb9tawMqKX0d_S0vb9fu14w63m2")
+	SecretKey = file.Section("img").Key("SecretKey").MustString("qdHc65mccSF4ajgcDq9q-EUdgdXqXhViHA5G1bxB")
+	Bucket = file.Section("img").Key("Bucket").MustString("outercyrex-blog")
+	ImgServer = file.Section("img").Key("ImgServer").MustString("http://shwfbbqxt.hd-bkt.clouddn.com/")
 }
