@@ -3,3 +3,9 @@ html,body,#app{
     margin:0;
     padding:0;
 }
+
+.ant-code{
+    margin:10px;
+    background-color:white;
+}
+
