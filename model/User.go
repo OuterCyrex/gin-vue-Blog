@@ -28,6 +28,17 @@ func CheckUser(username string) int {
 	return errmsg.SUCCESS
 }
 
+//判断重复用户名是否为新增用户
+
+func EditCheck(id int, username string) int {
+	var user User
+	db.Select("id").Where("username = ?", username).First(&user)
+	if user.ID == uint(id) || user.ID <= 0 {
+		return errmsg.SUCCESS
+	}
+	return errmsg.ERROR_USERNAME_USED
+}
+
 //新增用户
 
 func CreateUser(data *User) int {
@@ -39,12 +50,27 @@ func CreateUser(data *User) int {
 	return errmsg.SUCCESS
 }
 
+// 查询单个用户
+
+func GetUser(id int) (User, int) {
+	var user User
+	err := db.Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return user, errmsg.ERROR
+	}
+	return user, errmsg.SUCCESS
+}
+
 //查询用户列表
 
-func GetUsers(pageSize int, pageNum int) ([]User, int, int64) {
+func GetUsers(username string, pageSize int, pageNum int) ([]User, int, int64) {
 	var users []User
 	var total int64
-	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
+	if username == "" {
+		db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users)
+	} else {
+		db.Where("username LIKE ?", username+"%").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users)
+	}
 	db.Model(&users).Count(&total)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		fmt.Printf("用户查询出错,%v", err)

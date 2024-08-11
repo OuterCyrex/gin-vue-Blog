@@ -35,13 +35,24 @@ func AddUser(c *gin.Context) {
 	})
 }
 
-//查询单个用户
+// 查询单个用户
+
+func GetUserInfo(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	data, code := model.GetUser(id)
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"data":    data,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
 
 //查询用户列表
 
 func GetUser(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
+	username := c.Query("username")
 
 	if pageSize == 0 {
 		pageSize = -1
@@ -52,7 +63,7 @@ func GetUser(c *gin.Context) {
 
 	//Cancel limit and offset if value == -1 是gorm的特性
 
-	data, code, total := model.GetUsers(pageSize, pageNum)
+	data, code, total := model.GetUsers(username, pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
@@ -67,7 +78,7 @@ func EditUser(c *gin.Context) {
 	var data model.User
 	id, _ := strconv.Atoi(c.Param("id"))
 	_ = c.ShouldBindJSON(&data)
-	code := model.CheckUser(data.Username)
+	code := model.EditCheck(id, data.Username)
 	if code == errmsg.SUCCESS {
 		code = model.EditUser(id, &data)
 	}

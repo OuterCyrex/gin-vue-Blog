@@ -46,6 +46,7 @@ func InitRouter() {
 	router := r.Group("api/v1")
 	{
 		router.GET("users", version1.GetUser)
+		router.GET("user/:id", version1.GetUserInfo)
 		router.GET("categories", version1.GetCategory)
 		router.GET("articles", version1.GetArticle)
 		router.GET("article/:id", version1.SearchArticle)
