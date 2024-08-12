@@ -49,7 +49,6 @@ export default {
       this.$refs.loginFormRef.validate(async valid => {
         if(!valid) return this.$message.error("登录信息无效");
         const { data: res } = await this.$http.post("login",this.formData)
-        console.log(res)
         if (res.status !== 200)return this.$message.error(res.msg)
         window.sessionStorage.setItem("token", res.token)
         this.$router.push("/admin/index")

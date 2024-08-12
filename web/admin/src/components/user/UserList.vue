@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>用户列表</h3>
+    <div class="mainTitle">用户列表</div>
     <a-card>
       <a-row :gutter="20">
         <a-col :span="6">
@@ -11,11 +11,12 @@
         </a-col>
       </a-row>
       <a-table rowKey="username" :columns="columns" :pagination="pagination" :dataSource="userList" @change="handleTableChange" bordered style="margin-top:40px;">
-        <span slot="role" slot-scope="role">{{ role === 1 ? "管理员" : "用户"}}</span>
+        <a-tag slot="role" slot-scope="role" :color="role===1?'palevioletred':'deepskyblue'">{{ role === 1 ? "管理员" : "用户"}}</a-tag>
         <template slot="action" slot-scope="data">
         <div class="actionSlot">
-          <a-button type="primary" icon="edit" @click="editUser(data.ID)" style="margin-right:20px;">编辑</a-button>
-          <a-button type="danger" icon="delete" @click="deleteUser(data.ID)">删除</a-button>
+          <a-button type="primary" icon="edit" @click="editUser(data.ID)" >编辑</a-button>
+          <a-button type="danger" icon="delete" @click="deleteUser(data.ID)" style="margin:0 20px;">删除</a-button>
+          <a-button type="info" icon="redo" @click="editPsw(data.ID)" >重置</a-button>
         </div>
         </template>
       </a-table>
@@ -57,6 +58,23 @@
             <a-select-option key="1" value="1">管理员</a-select-option>
             <a-select-option key="2" value="2">用户</a-select-option>
           </a-select>
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
+
+    <!--更改密码-->
+    <a-modal
+        title="更改密码"
+        :visible="editPswVisible"
+        @ok="editPswOk"
+        @cancel="editPswCancel"
+        destroyOnClose >
+      <a-form-model :model="newPsw" :rules="newPswRule" ref="editPswRef">
+        <a-form-model-item has-feedback label="密码" prop="password">
+          <a-input-password v-model="newPsw.password"></a-input-password>
+        </a-form-model-item>
+        <a-form-model-item has-feedback label="确认密码" prop="checkpsw">
+          <a-input-password v-model="newPsw.checkpsw"></a-input-password>
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -117,6 +135,11 @@ export default {
         password:'',
         checkpsw:'',
       },
+      newPsw:{
+        id:0,
+        password:'',
+        checkpsw:'',
+      },
       userList:[],
       columns,
       queryParam:{
@@ -127,6 +150,7 @@ export default {
       visible:false,
       addUserVisible:false,
       editUserVisible:false,
+      editPswVisible:false,
       userRule:{
         username:[{validator:(rule,value,callback)=>{
           if(this.userInfo.username === ""){
@@ -166,6 +190,29 @@ export default {
               callback(new Error('请输入密码'))
             }
             if(this.newUser.checkpsw !== this.newUser.password){
+              callback(new Error('两次输入密码不一致'))
+            }else{
+              callback()
+            }
+          },trigger:'blur'}]
+      },
+      newPswRule:{
+        password:[{validator:(rule,value,callback)=>{
+            if(this.newPsw.password === ""){
+              callback(new Error('请输入密码'))
+            }
+            if([...this.newPsw.password].length < 6 || [...this.newPsw.password].length > 20){
+              callback(new Error("密码长度应在 6 到 20 之间"))
+            }else{
+              callback()
+            }
+          },trigger:'blur',
+        }],
+        checkpsw:[{validator:(rule,value,callback)=>{
+            if(this.newPsw.checkpsw === ""){
+              callback(new Error('请输入密码'))
+            }
+            if(this.newPsw.checkpsw !== this.newPsw.password){
               callback(new Error('两次输入密码不一致'))
             }else{
               callback()
@@ -244,6 +291,7 @@ export default {
     adminChange(value){
       this.userInfo.role = Number(value)
     },
+
     async editUser(id){
       this.editUserVisible = true
       const {data:res} = await this.$http.get(`user/${id}`)
@@ -253,6 +301,7 @@ export default {
     editUserOk(){
       this.$refs.editUserRef.validate(async (valid)=>{
         if(!valid)return this.$message.error("请填写正确信息")
+        if(this.userInfo.role == 0)this.userInfo.role = 2
         const { data:res } = await this.$http.put('user/'+ this.userInfo.id, {
           username: this.userInfo.username,
           role: this.userInfo.role,
@@ -267,6 +316,37 @@ export default {
         this.$refs.editUserRef.resetFields()
         this.editUserVisible = false
     },
+
+    async editPsw(id){
+      this.editPswVisible = true
+      this.newPsw.id = id
+    },
+    editPswOk(){
+      this.$refs.editPswRef.validate(async (valid)=>{
+        if(!valid)return this.$message.error("请填写正确信息")
+        const { data:res } = await this.$http.put('user/pwd/'+ this.newPsw.id, {
+          password: this.newPsw.password,
+        })
+        if(res.status !== 200) return this.$message.error(res.message)
+        this.$message.success("更新用户信息成功")
+        this.editPswCancel()
+        this.getUserList()
+      })
+    },
+    editPswCancel(){
+      this.$refs.editPswRef.resetFields()
+      this.editPswVisible = false
+    },
   }
 }
 </script>
+<style scoped>
+.mainTitle{
+  font-size: calc(20px + 2vw);
+  text-align: center;
+  align-content: center;
+  background-color: white;
+  font-family:"方正粗黑宋简体",sans-serif;
+  user-select: none;
+}
+</style>

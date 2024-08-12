@@ -68,15 +68,21 @@ func GetUsers(username string, pageSize int, pageNum int) ([]User, int, int64) {
 	var total int64
 	if username == "" {
 		db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users)
+		db.Model(&users).Count(&total)
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			fmt.Printf("用户查询出错,%v", err)
+			return nil, errmsg.ERROR, 0
+		}
+		return users, errmsg.SUCCESS, total
 	} else {
 		db.Where("username LIKE ?", username+"%").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users)
+		db.Model(&users).Where("username LIKE ?", username+"%").Count(&total)
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			fmt.Printf("用户查询出错,%v", err)
+			return nil, errmsg.ERROR, 0
+		}
+		return users, errmsg.SUCCESS, total
 	}
-	db.Model(&users).Count(&total)
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		fmt.Printf("用户查询出错,%v", err)
-		return nil, errmsg.ERROR, 0
-	}
-	return users, errmsg.SUCCESS, total
 }
 
 //编辑用户信息
@@ -85,6 +91,22 @@ func EditUser(id int, data *User) int {
 	var maps = make(map[string]interface{})
 	maps["username"] = data.Username
 	maps["role"] = data.Role
+	result := db.Model(&User{}).Where("id = ?", id).Updates(maps)
+	if result.Error != nil {
+		return errmsg.ERROR
+	}
+	if result.RowsAffected == 0 {
+		return errmsg.ERROR_USER_NOT_EXIST
+	}
+	fmt.Println(result.RowsAffected)
+	return errmsg.SUCCESS
+}
+
+//更新用户密码
+
+func EditPsw(id int, data *User) int {
+	var maps = make(map[string]interface{})
+	maps["password"] = ScryptPwd(data.Password)
 	result := db.Model(&User{}).Where("id = ?", id).Updates(maps)
 	if result.Error != nil {
 		return errmsg.ERROR

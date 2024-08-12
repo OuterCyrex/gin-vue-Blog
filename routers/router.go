@@ -26,6 +26,7 @@ func InitRouter() {
 
 		auth.PUT("user/:id", version1.EditUser)
 		auth.DELETE("user/:id", version1.DeleteUser)
+		auth.PUT("user/pwd/:id", version1.EditPWD)
 
 		//Category模块的router接口
 
@@ -36,7 +37,6 @@ func InitRouter() {
 
 		//Article模块的router接口
 		auth.POST("article/add", version1.AddArticle)
-
 		auth.PUT("article/:id", version1.EditArticle)
 		auth.DELETE("article/:id", version1.DeleteArticle)
 
@@ -48,6 +48,7 @@ func InitRouter() {
 		router.GET("users", version1.GetUser)
 		router.GET("user/:id", version1.GetUserInfo)
 		router.GET("categories", version1.GetCategory)
+		router.GET("category/:id", version1.SearchCategory)
 		router.GET("articles", version1.GetArticle)
 		router.GET("article/:id", version1.SearchArticle)
 		router.GET("article/category/:id", version1.GetArticleByCategory)

@@ -24,9 +24,24 @@ func AddCategory(c *gin.Context) {
 	})
 }
 
+//查询单个分类
+
+func SearchCategory(c *gin.Context) {
+	var data model.Category
+	id, _ := strconv.Atoi(c.Param("id"))
+	_ = c.ShouldBindJSON(&data)
+	data, code := model.SearchCategory(uint(id))
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"data":    data,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
 //查询分类列表
 
 func GetCategory(c *gin.Context) {
+	name := c.Query("name")
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
 
@@ -39,7 +54,7 @@ func GetCategory(c *gin.Context) {
 
 	//Cancel limit and offset if value == -1 是gorm的特性
 
-	data, code, total := model.GetCategory(pageSize, pageNum)
+	data, code, total := model.GetCategory(name, pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
@@ -54,7 +69,7 @@ func EditCategory(c *gin.Context) {
 	var data model.Category
 	id, _ := strconv.Atoi(c.Param("id"))
 	_ = c.ShouldBindJSON(&data)
-	code := model.CheckCategory(data.Name)
+	code := model.CheckUpCategory(data.ID, data.Name)
 	if code == errmsg.SUCCESS {
 		code = model.EditCategory(id, &data)
 	}

@@ -12,6 +12,17 @@ type Category struct {
 	Name string `gorm:"type:varchar(20);not null" json:"name"`
 }
 
+//查询单个分类
+
+func SearchCategory(id uint) (Category, int) {
+	var cate Category
+	db.Where("id=?", id).First(&cate)
+	if cate.ID == 0 {
+		return Category{}, errmsg.ERROR_CATEGORY_NOT_EXIST
+	}
+	return cate, errmsg.SUCCESS
+}
+
 //查询分类是否存在
 
 func CheckCategory(name string) int {
@@ -21,6 +32,18 @@ func CheckCategory(name string) int {
 		return errmsg.ERROR_CATEGORY_USED
 	}
 	return errmsg.SUCCESS
+}
+
+//编辑防重名
+
+func CheckUpCategory(id uint, name string) int {
+	var cate Category
+	fmt.Println(id, name)
+	db.Select("id").Where("name = ?", name).First(&cate)
+	if cate.ID == id || cate.ID <= 0 {
+		return errmsg.SUCCESS
+	}
+	return errmsg.ERROR_CATEGORY_NOT_EXIST
 }
 
 //新增分类
@@ -35,15 +58,27 @@ func CreateCategory(data *Category) int {
 
 //查询分类列表
 
-func GetCategory(pageSize int, pageNum int) ([]Category, int, int64) {
+func GetCategory(name string, pageSize int, pageNum int) ([]Category, int, int64) {
 	var cate []Category
 	var total int64
-	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cate).Count(&total).Error
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		fmt.Printf("分类查询出错,%v", err)
-		return nil, errmsg.ERROR, 0
+	var err error
+	if name != "" {
+		err = db.Where("name Like ?", name+"%").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cate).Error
+		db.Model(&cate).Where("name Like ?", name+"%").Count(&total)
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			fmt.Printf("分类查询出错,%v", err)
+			return nil, errmsg.ERROR, 0
+		}
+		return cate, errmsg.SUCCESS, total
+	} else {
+		err = db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cate).Error
+		db.Model(&cate).Count(&total)
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			fmt.Printf("分类查询出错,%v", err)
+			return nil, errmsg.ERROR, 0
+		}
+		return cate, errmsg.SUCCESS, total
 	}
-	return cate, errmsg.SUCCESS, total
 }
 
 //编辑分类信息

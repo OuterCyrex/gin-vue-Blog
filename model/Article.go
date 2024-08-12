@@ -23,12 +23,17 @@ func GetArticleByCategory(pageSize int, pageNum int, cid int) ([]Article, int, i
 	var cate Category
 	var total int64
 	db.Where("id = ?", cid).First(&cate)
-	if cate.ID <= 0 {
+	if cate.ID < 0 {
 		return []Article{}, errmsg.ERROR_CATEGORY_NOT_EXIST, 0
 	}
-
 	var cateArtList []Article
-	result := db.Preload("Category").Limit(pageSize).Offset((pageNum-1)*pageSize).Where("Cid = ?", cid).Find(&cateArtList).Count(&total)
+	if cate.ID == 0 {
+		db.Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cateArtList)
+		db.Model(&cate).Count(&total)
+		return cateArtList, errmsg.SUCCESS, total
+	}
+	result := db.Preload("Category").Limit(pageSize).Offset((pageNum-1)*pageSize).Where("Cid = ?", cid).Find(&cateArtList)
+	db.Model(&cate).Count(&total)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return []Article{}, errmsg.ERROR_ARTICLE_NOT_EXIST, total
@@ -54,15 +59,27 @@ func SearchArticleByCid(id int) (Article, int) {
 
 //查询文章列表
 
-func GetArticle(pageSize int, pageNum int) ([]Article, int, int64) {
+func GetArticle(title string, pageSize int, pageNum int) ([]Article, int, int64) {
 	var art []Article
 	var total int64
-	err := db.Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&art).Count(&total).Error
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		fmt.Printf("文章查询出错,%v", err)
-		return nil, errmsg.ERROR, 0
+	var err error
+	if title != "" {
+		err = db.Order("updated_at DESC").Preload("Category").Where("title LIKE ?", title+"%").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&art).Error
+		db.Model(&art).Where("title LIKE ?", title+"%").Count(&total)
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			fmt.Printf("文章查询出错,%v", err)
+			return nil, errmsg.ERROR, 0
+		}
+		return art, errmsg.SUCCESS, total
+	} else {
+		err = db.Order("updated_at DESC").Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&art).Error
+		db.Model(&art).Count(&total)
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			fmt.Printf("文章查询出错,%v", err)
+			return nil, errmsg.ERROR, 0
+		}
+		return art, errmsg.SUCCESS, total
 	}
-	return art, errmsg.SUCCESS, total
 }
 
 //添加文章

@@ -36,6 +36,7 @@ func SearchArticle(c *gin.Context) {
 //查询文章列表
 
 func GetArticle(c *gin.Context) {
+	title := c.Query("title")
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
 
@@ -48,7 +49,7 @@ func GetArticle(c *gin.Context) {
 
 	//Cancel limit and offset if value == -1 是gorm的特性
 
-	data, code, total := model.GetArticle(pageSize, pageNum)
+	data, code, total := model.GetArticle(title, pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,

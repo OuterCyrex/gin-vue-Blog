@@ -24,6 +24,7 @@ const routes = [
         children:[
             {path:'index',component: Index},
             {path:'addarticle',component: AddArticle},
+            {path:'addarticle/:id',component: AddArticle,props:true},
             {path:'articlelist',component: ArticleList},
             {path:'categorylist',component: CategoryList},
             {path:'userlist',component: UserList},

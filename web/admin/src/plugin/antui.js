@@ -15,6 +15,8 @@ import {
     Pagination,
     Modal,
     Select,
+    Tag,
+    Upload,
 } from 'ant-design-vue'
 
 message.config({
@@ -40,3 +42,5 @@ Vue.use(LocaleProvider)
 Vue.use(Pagination)
 Vue.use(Modal)
 Vue.use(Select)
+Vue.use(Tag)
+Vue.use(Upload)

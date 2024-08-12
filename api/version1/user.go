@@ -91,6 +91,19 @@ func EditUser(c *gin.Context) {
 	})
 }
 
+//编辑密码
+
+func EditPWD(c *gin.Context) {
+	var data model.User
+	id, _ := strconv.Atoi(c.Param("id"))
+	_ = c.ShouldBindJSON(&data)
+	code := model.EditPsw(id, &data)
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
 //删除用户
 //gorm提供的是软删除，只是隐藏了被删除的行，而并不是直接在数据库中删除
 
