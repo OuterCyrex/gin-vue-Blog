@@ -10,6 +10,7 @@ import (
 	"gin-vue-blog/middleware"
 	"gin-vue-blog/utils"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func InitRouter() {
@@ -18,6 +19,12 @@ func InitRouter() {
 	r.Use(middleware.Logger())
 	r.Use(gin.Recovery())
 	r.Use(middleware.Cors())
+
+	r.LoadHTMLGlob("static/admin/index.html")
+	r.Static("admin/static", "static/admin/static")
+	r.GET("admin", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", nil)
+	})
 
 	auth := r.Group("api/v1")
 	auth.Use(middleware.JwtToken())

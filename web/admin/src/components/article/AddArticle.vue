@@ -26,7 +26,7 @@
           </a-upload>
         </a-form-model-item>
         <a-form-model-item label="文章内容" prop="content">
-          <a-input type="textarea" v-model="articleInfo.content"></a-input>
+          <mavon-editor ref="md" @change="change" @imgAdd="imgAdd" v-model="articleInfo.content"/>
         </a-form-model-item>
         <a-form-model-item>
           <a-button type="danger" @click="articleOk(articleInfo.id)"> {{ articleInfo.id ? '更新':'提交' }} </a-button>
@@ -39,6 +39,7 @@
 
 <script>
 import {Url} from '@/plugin/http'
+import axios from "axios";
 export default {
   props:['id'],
   data(){
@@ -90,9 +91,6 @@ export default {
       this.articleInfo.id = res.data.ID
     },
     uploadChange(value){
-      if(value.file.status !== 'uploading'){
-
-      }
       if(value.file.status === 'done'){
         this.$message.success("图片上传成功")
         const imgURL = value.file.response.url
@@ -108,18 +106,34 @@ export default {
           const {data : res} = await this.$http.post('article/add',this.articleInfo)
           if(res.status !== 200)return this.$message.error(res.message)
           this.$message.success("添加成功")
-          this.$router.push('/admin/articleList')
+          this.$router.push('/articleList')
         }else{
           const {data : res} = await this.$http.put(`article/${id}`,this.articleInfo)
           if(res.status !== 200)return this.$message.error(res.message)
           this.$message.success("添加成功")
-          this.$router.push('/admin/articleList')
+          this.$router.push('/articleList')
         }
       })
     },
     addArticleCancel(){
       this.$refs.articleInfoRef.resetFields()
-    }
+    },
+    imgAdd(pos, $file) {
+      let formData = new FormData();
+      formData.append("file", $file);
+      console.log(formData);
+      axios({
+        url:  this.uploadURL,
+        method: "POST",
+        data: formData,
+      }).then((res) => {
+        if (res.status === 200) {
+          this.$refs.md.$img2Url(pos, res.data.url);
+        } else {
+          this.$message.error(res.message);
+        }
+      });
+    },
   },
 }
 </script>

@@ -51,7 +51,7 @@ export default {
         const { data: res } = await this.$http.post("login",this.formData)
         if (res.status !== 200)return this.$message.error(res.msg)
         window.sessionStorage.setItem("token", res.token)
-        this.$router.push("/admin/index")
+        this.$router.push("/index")
       })
     }
   }

@@ -7,7 +7,7 @@
           <a-input-search v-model="queryParam.title" placeholder="搜索标签" enter-button allowClear @search="getArticleList"/>
         </a-col>
         <a-col :span="4">
-          <a-button type="primary" @click="$router.push('/admin/addarticle')">新增</a-button>
+          <a-button type="primary" @click="$router.push('/addarticle')">新增</a-button>
         </a-col>
         <a-col :span="6" :offset="4">
           <a-select allowClear style="width:200px;" placeholder="请选择标签" @change="CategoryChange" >
@@ -24,7 +24,7 @@
         </span>
         <template slot="action" slot-scope="data">
           <div class="actionSlot">
-            <a-button type="primary" icon="edit" style="margin:0 10px;" size="small" @click="$router.push(`/admin/addarticle/${data.ID}`)">编辑</a-button>
+            <a-button type="primary" icon="edit" style="margin:0 10px;" size="small" @click="$router.push(`/addarticle/${data.ID}`)">编辑</a-button>
             <a-button type="danger" icon="delete" @click="deleteArticle(data.ID)" style="margin:0 10px;" size="small">删除</a-button>
           </div>
         </template>

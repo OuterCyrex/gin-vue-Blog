@@ -37,7 +37,7 @@ export default {
   },
   methods:{
     gotoPage(item){
-      this.$router.push('/admin/'+item.key).catch((err) => err)
+      this.$router.push('/'+item.key).catch((err) => err)
     }
   }
 }

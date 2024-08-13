@@ -3,5 +3,8 @@ module.exports = defineConfig({
   transpileDependencies: true
 })
 module.exports = {
-  lintOnSave: false
+  lintOnSave: false,
+  publicPath : '/admin/',
+  outputDir : 'dist',
+  assetsDir : 'static',
 }
