@@ -20,9 +20,13 @@ func InitRouter() {
 	r.Use(gin.Recovery())
 	r.Use(middleware.Cors())
 
-	r.LoadHTMLGlob("static/admin/index.html")
+	r.LoadHTMLFiles("static/admin/admin.html", "static/index.html")
 	r.Static("admin/static", "static/admin/static")
-	r.GET("admin", func(c *gin.Context) {
+	r.GET("admin/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "admin.html", nil)
+	})
+	r.Static("static", "static/static")
+	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
 
@@ -49,6 +53,9 @@ func InitRouter() {
 
 		//Upload模块的router接口
 		auth.POST("upload", version1.UploadFile)
+
+		//Profile模块的router接口
+		auth.PUT("profile/:id", version1.UpdateProfile)
 	}
 	router := r.Group("api/v1")
 	{
@@ -61,6 +68,7 @@ func InitRouter() {
 		router.GET("article/category/:id", version1.GetArticleByCategory)
 		router.POST("user/add", version1.AddUser)
 		router.POST("login", version1.Login)
+		router.GET("profile/:id", version1.GetProfile)
 	}
 	err := r.Run(utils.HttpPort)
 	fmt.Printf("routers出错，%v", err)

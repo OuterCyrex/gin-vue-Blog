@@ -14,6 +14,7 @@ type Article struct {
 	Cid      int      `json:"cid" gorm:"type:int;not null;"`
 	Desc     string   `json:"desc" gorm:"type:varchar(200)"`
 	Content  string   `json:"content" gorm:"type:longtext;not null"`
+	HTML     string   `json:"html" gorm:"type:longtext;not null"`
 	Img      string   `json:"img" gorm:"type:varchar(200)"`
 }
 
@@ -28,11 +29,11 @@ func GetArticleByCategory(pageSize int, pageNum int, cid int) ([]Article, int, i
 	}
 	var cateArtList []Article
 	if cate.ID == 0 {
-		db.Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cateArtList)
+		db.Order("updated_at DESC").Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cateArtList)
 		db.Model(&cate).Count(&total)
 		return cateArtList, errmsg.SUCCESS, total
 	}
-	result := db.Preload("Category").Limit(pageSize).Offset((pageNum-1)*pageSize).Where("Cid = ?", cid).Find(&cateArtList)
+	result := db.Order("updated_at DESC").Preload("Category").Limit(pageSize).Offset((pageNum-1)*pageSize).Where("Cid = ?", cid).Find(&cateArtList)
 	db.Model(&cate).Count(&total)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -101,6 +102,7 @@ func EditArticle(id int, data *Article) int {
 	maps["desc"] = data.Desc
 	maps["content"] = data.Content
 	maps["img"] = data.Img
+	maps["html"] = data.HTML
 	result := db.Model(&Article{}).Where("id = ?", id).Updates(maps)
 	if result.Error != nil {
 		return errmsg.ERROR

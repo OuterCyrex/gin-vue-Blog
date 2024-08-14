@@ -13,6 +13,7 @@
     </a-sub-menu>
     <a-menu-item key="categorylist"><a-icon type="tag"></a-icon><span>标签列表</span></a-menu-item>
     <a-menu-item key="userlist"><a-icon type="user"></a-icon><span>用户列表</span></a-menu-item>
+    <a-menu-item key="profile"><a-icon type="setting"></a-icon><span>个人设置</span></a-menu-item>
   </a-menu>
   </a-layout-sider>
 </template>

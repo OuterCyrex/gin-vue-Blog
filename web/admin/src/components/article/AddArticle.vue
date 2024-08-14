@@ -54,6 +54,7 @@ export default {
         desc:'',
         content:'',
         img:'',
+        html:'',
       },
       categoryList:[],
       articleInfoRules:{
@@ -134,6 +135,10 @@ export default {
         }
       });
     },
+    change(value,render){
+      this.articleInfo.content = value
+      this.articleInfo.html = render
+    }
   },
 }
 </script>
