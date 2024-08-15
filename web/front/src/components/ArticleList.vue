@@ -28,6 +28,7 @@
       </v-col>
     </v-row>
     <div class="text-center">
+      <div class="mt-2 mb-2" style="font-size: 20px">共{{this.total}}条</div>
       <v-pagination total-visible="7" v-model="queryParam.pagenum" :length="Math.ceil(this.total/this.queryParam.pagesize)" @input="getArticleList()"></v-pagination>
     </div>
   </v-col>
@@ -60,7 +61,6 @@ export default {
     }else{
       this.getArticleList();
     }
-    console.log(this.articleList)
   },
   watch: {
     id(newVal) {

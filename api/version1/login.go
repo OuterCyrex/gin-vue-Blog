@@ -10,11 +10,30 @@ import (
 	"time"
 )
 
+//管理员登录
+
 func Login(c *gin.Context) {
 	var data model.User
 	_ = c.ShouldBind(&data)
 
 	code := model.CheckLogin(data.Username, data.Password)
+	if code == errmsg.SUCCESS {
+		setToken(c, data)
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"code": errmsg.ERROR,
+			"msg":  errmsg.GetErrMsg(code),
+		})
+	}
+}
+
+//用户登录
+
+func UserLogin(c *gin.Context) {
+	var data model.User
+	_ = c.ShouldBind(&data)
+
+	code := model.UserLogin(data.Username, data.Password)
 	if code == errmsg.SUCCESS {
 		setToken(c, data)
 	} else {

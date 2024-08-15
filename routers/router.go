@@ -57,18 +57,29 @@ func InitRouter() {
 		//Profile模块的router接口
 		auth.PUT("profile/:id", version1.UpdateProfile)
 	}
+
 	router := r.Group("api/v1")
 	{
+		//用户接口
 		router.GET("users", version1.GetUser)
 		router.GET("user/:id", version1.GetUserInfo)
+		router.POST("user/add", version1.AddUser)
+		router.GET("profile/:id", version1.GetProfile)
+		//分类接口
 		router.GET("categories", version1.GetCategory)
 		router.GET("category/:id", version1.SearchCategory)
+		//文章接口
 		router.GET("articles", version1.GetArticle)
 		router.GET("article/:id", version1.SearchArticle)
 		router.GET("article/category/:id", version1.GetArticleByCategory)
-		router.POST("user/add", version1.AddUser)
+
+		//评论接口
+		router.GET("comment/:id", version1.GetCommentsByArticle)
+		router.POST("comment", version1.AddComment)
+
+		//登录接口
+		router.POST("userlogin", version1.UserLogin)
 		router.POST("login", version1.Login)
-		router.GET("profile/:id", version1.GetProfile)
 	}
 	err := r.Run(utils.HttpPort)
 	fmt.Printf("routers出错，%v", err)

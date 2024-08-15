@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="pb-10">
     <v-col class="pl-5 pr-5">
     <v-img src="https://img.oulu.me/019%20Malibu%20Beach.png" max-height="300px" class="rounded">
       <v-card-title class="d-flex justify-center">
@@ -50,9 +50,17 @@
           </v-row>
         </v-col>
       </v-row>
-      <v-row rows="12">
+      <v-divider></v-divider>
+      <v-row rows="12" class="mt-2">
         <v-col cols="12">
 
+          <v-card >
+          <v-card class="pa-0" color="#f4f4f4" outlined>
+            <div class="d-flex justify-center" style="background-color:#C5E1A5; color:white;font-size:calc(20px + 1vw);padding:10px">公共留言板</div>
+            <CommentWeb :id="1"></CommentWeb>
+          </v-card>
+
+          </v-card>
         </v-col>
       </v-row>
     </v-col>
@@ -60,7 +68,10 @@
 </template>
 <script>
 
+import CommentWeb from "@/components/CommentWeb.vue";
+
 export default {
+  components: {CommentWeb},
   data(){
     return{
       LastArticleInfo:{},

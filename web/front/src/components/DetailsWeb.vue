@@ -1,16 +1,30 @@
 <template>
   <div>
-    <div class="d-flex justify-center text-h4 font-weight-bold pt-3">{{articleInfo.title}}</div>
+  <v-card class="pb-10">
+    <div class="d-flex justify-center text-h4 font-weight-bold pt-3 pb-10">{{articleInfo.title}}</div>
     <v-divider class="pa-3 ma-3"></v-divider>
     <v-alert class="ma-4" elevation="1" color="indigo" dark border="left" outlined>{{articleInfo.desc}}</v-alert>
     <v-card-text>
       <div class="ArticleHTML" v-html="articleInfo.html"></div>
     </v-card-text>
+
+    <v-divider></v-divider>
+    <v-card class="ma-10">
+      <v-card class="pa-0" color="#f4f4f4" outlined>
+        <div class="d-flex justify-center" style="background-color: #00E5FF; color:white;font-size:calc(20px + 1vw);padding:10px">文章评论区</div>
+        <CommentWeb :id="this.id"></CommentWeb>
+      </v-card>
+
+    </v-card>
+  </v-card>
   </div>
 </template>
 
 <script>
+import CommentWeb from "@/components/CommentWeb.vue";
+
 export default {
+  components: {CommentWeb},
   props:['id'],
   data(){
     return{
@@ -80,5 +94,23 @@ export default {
   font-family: "Cascadia Code",sans-serif;
   font-size:12px;
 }
+.ArticleHTML >>> td{
+  padding:2px;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.ArticleHTML >>> table{
+  margin:auto;
+  padding:4px;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.ArticleHTML >>> th{
+  padding:2px;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.ArticleHTML >>> img{
+  width:90%;
+}
 </style>
-

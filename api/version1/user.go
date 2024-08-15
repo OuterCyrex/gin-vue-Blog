@@ -1,6 +1,7 @@
 package version1
 
 import (
+	"gin-vue-blog/middleware"
 	"gin-vue-blog/model"
 	"gin-vue-blog/utils/errmsg"
 	"gin-vue-blog/utils/validator"
@@ -116,4 +117,13 @@ func DeleteUser(c *gin.Context) {
 		"status":  code,
 		"message": errmsg.GetErrMsg(code),
 	})
+}
+
+// 通过token获取用户信息
+
+func GetNameByToken(c *gin.Context) (int, model.User) {
+	tokenHeader := c.Request.Header.Get("Authorization")
+	var user model.User
+	user, code := middleware.GetUserInfoByToken(tokenHeader)
+	return code, user
 }

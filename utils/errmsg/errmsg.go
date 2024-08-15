@@ -23,6 +23,10 @@ const (
 	//code = 3000... 文章模块错误
 
 	ERROR_ARTICLE_NOT_EXIST = 3001
+
+	//code = 4000... 评论模块错误
+
+	ERROR_COMMENT_NOT_EXIST = 4001
 )
 
 var codeMsg = map[int]string{
@@ -39,6 +43,7 @@ var codeMsg = map[int]string{
 	ERROR_CATEGORY_USED:      "分类已被使用",
 	ERROR_CATEGORY_NOT_EXIST: "分类不存在",
 	ERROR_ARTICLE_NOT_EXIST:  "文章不存在",
+	ERROR_COMMENT_NOT_EXIST:  "评论不存在",
 }
 
 func GetErrMsg(code int) string {

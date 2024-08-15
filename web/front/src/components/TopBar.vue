@@ -3,7 +3,9 @@
   <div>
     <v-app-bar app color="indigo darken-2" >
       <v-container class="py-0 fill-height">
-<!--        <v-avatar size="40" class="mx-12" color="grey"></v-avatar>-->
+        <v-avatar @click="LoginCouldSee" size="40" class="mx-5" color="grey">
+          <v-img v-if="token" src="../assets/defaultAvatar.png"></v-img>
+        </v-avatar>
         <v-btn text color="white" @click="$router.push('/')">首页</v-btn>
         <v-btn text color="white" @click="$router.push('/articles')">文章列表</v-btn>
         <v-btn v-for="item in categoryList" :key="item.id" text color="white" @click="$router.push(`/articles/${item.id}`)">{{item.name}}</v-btn>
@@ -32,6 +34,7 @@ export default {
         pagenum:1,
       },
       categoryList:[],
+      token : window.sessionStorage.token
     }
   },
   created() {
@@ -57,6 +60,9 @@ export default {
       this.queryParam.name=''
       this.sendDataToParent()
     },
+    LoginCouldSee(){
+      this.$emit('update:Login', true);
+    }
   }
 }
 </script>

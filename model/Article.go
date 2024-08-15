@@ -23,18 +23,18 @@ type Article struct {
 func GetArticleByCategory(pageSize int, pageNum int, cid int) ([]Article, int, int64) {
 	var cate Category
 	var total int64
-	db.Where("id = ?", cid).First(&cate)
-	if cate.ID < 0 {
+	result := db.Where("id = ?", cid).First(&cate)
+	if result.RowsAffected == 0 {
 		return []Article{}, errmsg.ERROR_CATEGORY_NOT_EXIST, 0
 	}
 	var cateArtList []Article
 	if cate.ID == 0 {
-		db.Order("updated_at DESC").Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cateArtList)
-		db.Model(&cate).Count(&total)
+		db.Order("updated_at DESC").Preload("Category").Where("NOT ID = 1").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&cateArtList)
+		db.Model(&cateArtList).Where("NOT ID = 1").Count(&total)
 		return cateArtList, errmsg.SUCCESS, total
 	}
-	result := db.Order("updated_at DESC").Preload("Category").Limit(pageSize).Offset((pageNum-1)*pageSize).Where("Cid = ?", cid).Find(&cateArtList)
-	db.Model(&cate).Count(&total)
+	result = db.Order("updated_at DESC").Preload("Category").Where("NOT ID = 1").Limit(pageSize).Offset((pageNum-1)*pageSize).Where("Cid = ?", cid).Find(&cateArtList)
+	db.Model(&cateArtList).Where("NOT ID = 1").Count(&total)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return []Article{}, errmsg.ERROR_ARTICLE_NOT_EXIST, total
@@ -65,16 +65,16 @@ func GetArticle(title string, pageSize int, pageNum int) ([]Article, int, int64)
 	var total int64
 	var err error
 	if title != "" {
-		err = db.Order("updated_at DESC").Preload("Category").Where("title LIKE ?", title+"%").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&art).Error
-		db.Model(&art).Where("title LIKE ?", title+"%").Count(&total)
+		err = db.Order("updated_at DESC").Preload("Category").Where("title LIKE ? && NOT id = 1", title+"%").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&art).Error
+		db.Model(&art).Where("title LIKE ? NOT id = 1", title+"%").Count(&total)
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			fmt.Printf("文章查询出错,%v", err)
 			return nil, errmsg.ERROR, 0
 		}
 		return art, errmsg.SUCCESS, total
 	} else {
-		err = db.Order("updated_at DESC").Preload("Category").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&art).Error
-		db.Model(&art).Count(&total)
+		err = db.Order("updated_at DESC").Preload("Category").Where("NOT id = 1").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&art).Error
+		db.Model(&art).Where("NOT id = 1").Count(&total)
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			fmt.Printf("文章查询出错,%v", err)
 			return nil, errmsg.ERROR, 0

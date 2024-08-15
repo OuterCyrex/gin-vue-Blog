@@ -1,3 +1,0 @@
-time="2024-08-09 00:05:43" level=info clientIP="::1" dataSize=391 hostName=OuterCyrex method=GET path=/api/v1/users spendTime=0.99ms statusCode=200 userAgent=PostmanRuntime/7.41.0
-time="2024-08-09 00:05:48" level=info clientIP="::1" dataSize=102 hostName=OuterCyrex method=GET path=/api/v1/categories spendTime=2.32ms statusCode=200 userAgent=PostmanRuntime/7.41.0
-time="2024-08-09 00:05:59" level=info clientIP="::1" dataSize=241 hostName=OuterCyrex method=POST path=/api/v1/login spendTime=42.66ms statusCode=200 userAgent=PostmanRuntime/7.41.0

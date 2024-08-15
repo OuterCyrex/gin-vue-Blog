@@ -28,6 +28,17 @@ func CheckUser(username string) int {
 	return errmsg.SUCCESS
 }
 
+//通过名称查询用户信息
+
+func CheckUserByName(username string) (User, int) {
+	var users User
+	db.Where("username = ?", username).First(&users)
+	if users.ID <= 0 {
+		return users, errmsg.ERROR_USER_NOT_EXIST
+	}
+	return users, errmsg.SUCCESS
+}
+
 //判断重复用户名是否为新增用户
 
 func EditCheck(id int, username string) int {
@@ -161,6 +172,19 @@ func CheckLogin(username, password string) int {
 	}
 	if users.Role != 1 {
 		return errmsg.ERROR_NO_PRIVILIGE
+	}
+	return errmsg.SUCCESS
+}
+
+func UserLogin(username, password string) int {
+	var users User
+	db.Where("username = ?", username).First(&users)
+	// gorm未查询到时返回默认空值
+	if users.ID == 0 {
+		return errmsg.ERROR_USER_NOT_EXIST
+	}
+	if ScryptPwd(password) != users.Password {
+		return errmsg.ERROR_PASSWORD_WRONG
 	}
 	return errmsg.SUCCESS
 }
