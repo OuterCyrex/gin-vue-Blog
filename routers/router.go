@@ -56,6 +56,10 @@ func InitRouter() {
 
 		//Profile模块的router接口
 		auth.PUT("profile/:id", version1.UpdateProfile)
+
+		// FriendLink模块的router接口
+		auth.POST("friend/add", version1.AddFriendLink)
+		auth.DELETE("friend/:id", version1.DeleteFriendLink)
 	}
 
 	router := r.Group("api/v1")
@@ -80,6 +84,9 @@ func InitRouter() {
 		//登录接口
 		router.POST("userlogin", version1.UserLogin)
 		router.POST("login", version1.Login)
+
+		//友链接口
+		router.GET("friend", version1.GetFriendLink)
 	}
 	err := r.Run(utils.HttpPort)
 	fmt.Printf("routers出错，%v", err)

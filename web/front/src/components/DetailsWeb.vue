@@ -95,18 +95,18 @@ export default {
   font-size:12px;
 }
 .ArticleHTML >>> td{
-  padding:2px;
+  padding:10px;
   border: 1px solid black;
   border-collapse: collapse;
 }
 .ArticleHTML >>> table{
-  margin:auto;
+  margin:40px auto;
   padding:4px;
   border: 1px solid black;
   border-collapse: collapse;
 }
 .ArticleHTML >>> th{
-  padding:2px;
+  padding:10px;
   border: 1px solid black;
   border-collapse: collapse;
 }

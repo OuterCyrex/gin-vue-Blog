@@ -13,7 +13,7 @@ const routes = [
     name: 'home',
     component: HomeView,
     children:[
-      {path:"/",component:IndexWeb,meta:[{title:'欢迎访问Outer Blog'}]},
+      {path:"/",component:IndexWeb,meta:{title:'欢迎访问Outer Blog'}},
       {path:'/articles',component:ArticleList,meta:{title:'文章列表 - Outer Blog'}},
       {path:'/articles/:id',component:ArticleList,meta:{title:'文章列表 - Outer Blog'},props:true},
       {path:'/detail/:id',component: DetailsWeb,meta:{title:'文章详情 - Outer Blog'},props:true},
@@ -26,6 +26,8 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+document.title = '欢迎访问Outer Blog'
 
 router.beforeEach((to, from, next) => {
   if(to.meta.title){
