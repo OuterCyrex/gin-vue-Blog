@@ -3,12 +3,12 @@
 #### Description
 
 I am pleased to announce the official release of version 1.0 on August 18, 2024
-This project was initiated on August 6, 2024 and took a total of 13 days to develop During this period, I encountered many difficulties, such as the outdated JWT library, and at the beginning When writing the frontend, UI libraries are not compatible with Vue2 or something like that
+This project was initiated on August 6, 2024 and took a total of 13 days to develop During this period, I encountered many difficulties, such as the outdated JWT library, and at the beginning When writing the frontend, the UI libraries are not compatible with Vue2 or something like that.
 But in the end, they were all successfully overcome, and the result was good!
 
 ## introduce
 
-For an attempt to separate front-end and back-end projects, the front-end was built using the Vue2 framework, the UI library used ant design vue and Vuetify, and the back-end used frameworks such as gin and gorm in the Go language
+For an attempt to separate front-end and back-end projects, the front-end was built using the `Vue2` framework, the UI library used `ant design vue` and `Vuetify`, and the back-end used frameworks such as `gin` and `gorm` in the Golang
 Overall, the effect of logging in, commenting, and viewing articles has been achieved.
 Due to the testing being conducted on the computer, the bugs that exist when opening the website on the mobile end are still unknown and need to be tested after going online.
 
