@@ -22,6 +22,7 @@ And in order to prevent malicious registration and other network attacks, versio
 #### What is the purpose of logging in?
 Actually, it's not very useful, mainly for making comments. In order to improve the quality of comments and limit malicious comments, only logged in users can make comments.
 However, after all, a personal blog is a personalized website, so its main function is still to display articles. Therefore, whether logged in or not, you can access the content of articles.
+![](http://shwfbbqxt.hd-bkt.clouddn.com/%28%24WDGZ%28B%7B8M1QP%28Q%5D_U6QS2.png)
 
 #### What happens if you comment on something bad?
 It's not really that bad, it's just that if I see inappropriate comments online, I will naturally delete them in the background.
