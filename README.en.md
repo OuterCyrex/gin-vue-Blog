@@ -17,6 +17,7 @@ Due to the testing being conducted on the computer, the bugs that exist when ope
 There is a gray avatar box in the top left corner of the front-end display page, click to enter the login interface.
 The 1.0 version currently does not support custom avatars because the online space of the image bed is limited (although considering that there won't be many users, it doesn't really matter).
 And in order to prevent malicious registration and other network attacks, version 1.0 temporarily uses an invitation system to register new accounts, which means that as long as you tell the webmaster, they will be assigned different accounts.
+![](http://shwfbbqxt.hd-bkt.clouddn.com/6H3VF3%5D5Y%5DXX%25~24N%60P%7B%29VN.png)
 
 #### What is the purpose of logging in?
 Actually, it's not very useful, mainly for making comments. In order to improve the quality of comments and limit malicious comments, only logged in users can make comments.
