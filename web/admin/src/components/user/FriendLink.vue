@@ -7,7 +7,7 @@
           <a-button type="primary" @click="addFriendLinkVisible = true">新增</a-button>
         </a-col>
       </a-row>
-      <a-table rowKey="username" :columns="columns" :pagination="pagination" :dataSource="FriendList" @change="handleTableChange" bordered style="margin-top:40px;">
+      <a-table rowKey="name" :columns="columns" :pagination="pagination" :dataSource="FriendList" @change="handleTableChange" bordered style="margin-top:40px;">
         <template slot="action" slot-scope="data">
           <div class="actionSlot">
             <a-button type="danger" icon="delete" @click="deleteFriend(data.id)" style="margin:0 10px;">删除</a-button>

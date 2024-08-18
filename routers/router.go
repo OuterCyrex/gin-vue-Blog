@@ -60,6 +60,9 @@ func InitRouter() {
 		// FriendLink模块的router接口
 		auth.POST("friend/add", version1.AddFriendLink)
 		auth.DELETE("friend/:id", version1.DeleteFriendLink)
+
+		//Comments模块的router接口
+		auth.DELETE("comment/:id", version1.DeleteComment)
 	}
 
 	router := r.Group("api/v1")
@@ -80,10 +83,12 @@ func InitRouter() {
 		//评论接口
 		router.GET("comment/:id", version1.GetCommentsByArticle)
 		router.POST("comment", version1.AddComment)
+		router.GET("comment", version1.GetComments)
 
 		//登录接口
 		router.POST("userlogin", version1.UserLogin)
 		router.POST("login", version1.Login)
+		router.GET("userinfo", version1.GetLoginInfoByToken)
 
 		//友链接口
 		router.GET("friend", version1.GetFriendLink)

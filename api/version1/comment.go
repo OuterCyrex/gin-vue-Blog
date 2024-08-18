@@ -29,6 +29,26 @@ func GetCommentsByArticle(c *gin.Context) {
 	})
 }
 
+func GetComments(c *gin.Context) {
+	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
+	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
+
+	if pageSize == 0 {
+		pageSize = -1
+	}
+	if pageNum == 0 {
+		pageNum = -1
+	}
+
+	data, code, total := model.GetComment(pageSize, pageNum)
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"data":    data,
+		"total":   total,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
 func AddComment(c *gin.Context) {
 	var user model.User
 	code, user := GetNameByToken(c)
@@ -46,6 +66,19 @@ func AddComment(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    comment,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+//删除评论
+
+func DeleteComment(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	code := model.DeleteComment(id)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
 		"message": errmsg.GetErrMsg(code),
 	})
 }

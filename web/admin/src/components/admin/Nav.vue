@@ -1,6 +1,6 @@
 <template>
   <a-layout-sider breakpoint="lg" v-model="collapsed"  style="user-select: none">
-  <div class="logo">
+  <div class="logo" style="background-color: #001529;color:white;font-size:calc(15px + 0.5vw);">
     <span>{{ collapsed?"Blog":"Outer Blog"}}</span>
   </div>
 
@@ -15,6 +15,7 @@
     <a-menu-item key="userlist"><a-icon type="user"></a-icon><span>用户列表</span></a-menu-item>
     <a-menu-item key="profile"><a-icon type="setting"></a-icon><span>个人设置</span></a-menu-item>
     <a-menu-item key="friendlink"><a-icon type="link"></a-icon><span>友链设置</span></a-menu-item>
+    <a-menu-item key="comment"><a-icon type="message"></a-icon><span>评论管理</span></a-menu-item>
   </a-menu>
   </a-layout-sider>
 </template>

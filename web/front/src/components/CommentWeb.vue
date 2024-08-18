@@ -7,7 +7,7 @@
           <v-avatar size="40" class="mx-5" color="grey">
             <v-img src="../assets/defaultAvatar.png"></v-img>
           </v-avatar>
-            <v-chip :color="item.User.ID === 1 ? 'pink':'blue'" label class="white--text mr-3">{{item.User.ID === 1? '管理员' : '用户'}}</v-chip>
+            <v-chip :color="item.User.role === 1 ? 'pink':'blue'" label class="white--text mr-3">{{item.User.role === 1? '管理员' : '用户'}}</v-chip>
             {{item.User.username}}
           </div>
           <v-card-subtitle v-text="item.comments"></v-card-subtitle>

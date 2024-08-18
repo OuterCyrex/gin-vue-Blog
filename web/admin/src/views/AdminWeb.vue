@@ -33,5 +33,8 @@ export default{
   justify-content: flex-end;
   align-items: center;
 }
+Footer{
+  padding:0;
+}
 </style>
 

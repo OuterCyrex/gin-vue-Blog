@@ -4,7 +4,7 @@
     <v-app-bar app color="indigo darken-2" >
       <v-container class="py-0 fill-height">
         <v-avatar @click="LoginCouldSee" size="40" class="mx-5" color="grey">
-          <v-img v-if="token" src="../assets/defaultAvatar.png"></v-img>
+          <v-img v-if="Logged" src="../assets/defaultAvatar.png"></v-img>
         </v-avatar>
         <v-btn text color="white" @click="$router.push('/')">首页</v-btn>
         <v-btn text color="white" @click="$router.push('/articles')">文章列表</v-btn>
@@ -26,6 +26,7 @@
 
 <script>
 export default {
+  props:['isLoggedIn'],
   data(){
     return{
       queryParam:{
@@ -34,11 +35,17 @@ export default {
         pagenum:1,
       },
       categoryList:[],
-      token : window.sessionStorage.token
+      Logged : false,
     }
   },
   created() {
     this.GetCategoryList()
+    this.getUserInfo()
+  },
+  watch:{
+    isLoggedIn(newVal){
+      this.Logged = newVal
+    }
   },
   methods:{
     async GetCategoryList(){
@@ -62,7 +69,26 @@ export default {
     },
     LoginCouldSee(){
       this.$emit('update:Login', true);
-    }
+    },
+    async getUserInfo(){
+      const token = window.sessionStorage.getItem("token");
+
+      if(!token)return;
+
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      };
+
+      const {data:res} = await this.$http.get("userinfo",config)
+
+      if(res.status!==200){
+        this.Logged = false;
+        return
+      }
+      this.Logged = true;
+    },
   }
 }
 </script>

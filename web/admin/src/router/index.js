@@ -10,6 +10,7 @@ import CategoryList from '../components/category/CategoryList.vue'
 import UserList from '../components/user/UserList.vue'
 import Profile from '../components/user/Profile.vue'
 import FriendLink from "../components/user/FriendLink.vue";
+import CommentView from "@/components/user/CommentView.vue";
 
 Vue.use(VueRouter)
 
@@ -31,13 +32,15 @@ const routes = [
             {path:'categorylist',component: CategoryList},
             {path:'userlist',component: UserList},
             {path:'profile',component:Profile},
-            {path:'friendlink',component:FriendLink}
+            {path:'friendlink',component:FriendLink},
+            {path:'comment',component:CommentView}
         ]
     }
 ]
 
 
 const router = new VueRouter({
+    mode: 'history',
     routes,
 })
 

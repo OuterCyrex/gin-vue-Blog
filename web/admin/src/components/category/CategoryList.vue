@@ -10,7 +10,7 @@
           <a-button type="primary" @click="addCategoryVisible = true">新增</a-button>
         </a-col>
       </a-row>
-      <a-table rowKey="username" :columns="columns" :pagination="pagination" :dataSource="categoryList" @change="handleTableChange" bordered style="margin-top:40px;">
+      <a-table rowKey="name" :columns="columns" :pagination="pagination" :dataSource="categoryList" @change="handleTableChange" bordered style="margin-top:40px;">
         <template slot="action" slot-scope="data">
           <div class="actionSlot">
             <a-button type="primary" icon="edit" @click="editCategory(data.id)" style="margin:0 10px;">编辑</a-button>

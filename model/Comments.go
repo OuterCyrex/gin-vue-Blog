@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	"gin-vue-blog/utils/errmsg"
 	"gorm.io/gorm"
 )
@@ -39,9 +40,37 @@ func GetCommentsByArticle(pageSize int, pageNum int, aid int) ([]Comments, int, 
 	return commentArt, errmsg.SUCCESS, total
 }
 
+//获取评论列表
+
+func GetComment(pageSize int, pageNum int) ([]Comments, int, int64) {
+	var comment []Comments
+	var total int64
+	var err error
+	err = db.Order("updated_at DESC").Preload("User").Preload("Article").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&comment).Error
+	db.Model(&comment).Count(&total)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		fmt.Printf(" 评论查询出错,%v", err)
+		return nil, errmsg.ERROR, 0
+	}
+	return comment, errmsg.SUCCESS, total
+}
+
+//创建新的评论
+
 func CreateComment(data *Comments) int {
 	err := db.Create(&data).Error
 	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCESS
+}
+
+//删除评论
+
+func DeleteComment(id int) int {
+	var comment []Comments
+	result := db.Delete(&comment, id)
+	if result.Error != nil {
 		return errmsg.ERROR
 	}
 	return errmsg.SUCCESS

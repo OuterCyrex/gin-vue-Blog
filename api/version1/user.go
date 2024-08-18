@@ -127,3 +127,16 @@ func GetNameByToken(c *gin.Context) (int, model.User) {
 	user, code := middleware.GetUserInfoByToken(tokenHeader)
 	return code, user
 }
+
+//返回用户信息
+
+func GetLoginInfoByToken(c *gin.Context) {
+	tokenHeader := c.Request.Header.Get("Authorization")
+	var user model.User
+	user, code := middleware.GetUserInfoByToken(tokenHeader)
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"data":    user,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
