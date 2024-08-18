@@ -1,6 +1,6 @@
-# gin-vue-blog
+# OuterCyrex gin-vue-blog
 
-#### Description
+## Description
 
 I am pleased to announce the official release of version 1.0 on August 18, 2024
 This project was initiated on August 6, 2024 and took a total of 13 days to develop During this period, I encountered many difficulties, such as the outdated JWT library, and at the beginning When writing the frontend, the UI libraries are not compatible with Vue2 or something like that.
