@@ -18,7 +18,7 @@ func SearchCategory(id uint) (Category, int) {
 	var cate Category
 	db.Where("id=?", id).First(&cate)
 	if cate.ID == 0 {
-		return Category{}, errmsg.ERROR_CATEGORY_NOT_EXIST
+		return Category{}, errmsg.ERROR_CATEGORY_USED
 	}
 	return cate, errmsg.SUCCESS
 }
@@ -41,9 +41,9 @@ func CheckUpCategory(id uint, name string) int {
 	fmt.Println(id, name)
 	db.Select("id").Where("name = ?", name).First(&cate)
 	if cate.ID == id || cate.ID <= 0 {
-		return errmsg.SUCCESS
+		return errmsg.ERROR_CATEGORY_NOT_EXIST
 	}
-	return errmsg.ERROR_CATEGORY_NOT_EXIST
+	return errmsg.SUCCESS
 }
 
 //新增分类
@@ -91,7 +91,7 @@ func EditCategory(id int, data *Category) int {
 		return errmsg.ERROR
 	}
 	if result.RowsAffected == 0 {
-		return errmsg.ERROR_CATEGORY_NOT_EXIST
+		return errmsg.ERROR_CATEGORY_USED
 	}
 	fmt.Println(result.RowsAffected)
 	return errmsg.SUCCESS

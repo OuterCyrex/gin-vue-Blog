@@ -41,7 +41,7 @@ func init() {
 
 func LoadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").MustString("debug")
-	HttpPort = file.Section("server").Key("HttpPort").MustString(":3000")
+	HttpPort = file.Section("server").Key("HttpPort").MustString(":8080")
 	JwtKey = file.Section("server").Key("JwtKey").MustString("3f2e1d0c1b2a394857665544332211")
 }
 
@@ -50,7 +50,7 @@ func LoadDataBase(file *ini.File) {
 	DbHost = file.Section("database").Key("DbHost").MustString("localhost")
 	DbPort = file.Section("database").Key("DbPort").MustString("3306")
 	DbUser = file.Section("database").Key("DbUser").MustString("ginVueAdmin")
-	DbPassword = file.Section("database").Key("DbPassword").MustString("admin123")
+	DbPassword = file.Section("database").Key("DbPassword").MustString("@Admin123")
 	DbName = file.Section("database").Key("DbName").MustString("ginvueblog")
 }
 

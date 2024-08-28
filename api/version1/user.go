@@ -15,6 +15,7 @@ import (
 func AddUser(c *gin.Context) {
 	var data model.User
 	_ = c.ShouldBindJSON(&data)
+	data.Role = 2
 
 	msg, code := validator.Validate(&data)
 	if code != errmsg.SUCCESS {

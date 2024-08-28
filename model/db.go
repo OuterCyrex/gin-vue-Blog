@@ -33,5 +33,5 @@ func InitDB() {
 	if err != nil {
 		fmt.Printf("mysql连接出错，%v", err)
 	}
-	_ = db.AutoMigrate(&User{}, &Article{}, &Category{}, &Profile{}, &Comments{}, &FriendLink{})
+	_ = db.AutoMigrate(&User{}, &Article{}, &Category{}, &Profile{}, &Comments{}, &FriendLink{}, &Tag{})
 }
